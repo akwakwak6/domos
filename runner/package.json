@@ -1,0 +1,14 @@
+{
+  "name": "runner",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/runner.js",
+    "publish": "npm run build && npm start",
+    "build": "node esbuild.config.mjs"
+  },
+  "dependencies": {
+    "@types/node": "^24.5.2",
+    "esbuild": "^0.25.9",
+    "home-assistant-device-sdk": "^0.6.3"
+  }
+}

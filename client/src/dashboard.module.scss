@@ -1,0 +1,131 @@
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100vw;
+    background: radial-gradient(1200px 800px at 80% -200px, rgba(3, 169, 244, 0.07), transparent 60%),
+        linear-gradient(180deg, #0d1013 0%, #111418 100%);
+    color: #e6e8eb;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+        "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    height: 60px;
+    background: color-mix(in oklab, #1b1f24 85%, black 15%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    z-index: 20;
+}
+
+.headerLeftNameContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 12px;
+}
+
+.headerLeftName {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #e6e8eb;
+    opacity: 0.9;
+}
+
+//display: 'flex', alignItems: 'center', gap: '10px'
+.buttonsContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.flexSpacer {
+    flex: 1;
+}
+
+.baseButton {
+    appearance: none;
+    border: 0;
+    color: #e6e8eb;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 0 2px 8px rgba(0, 0, 0, 0.25);
+    transition: "background 0.2s ease";
+}
+
+.publishButton {
+    @extend .baseButton;
+    background: linear-gradient(135deg, #0389d4, #0268b1);
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #03a9f4, #0288d1);
+    }
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+}
+
+.settingCodeButton {
+    @extend .baseButton;
+    background: transparent;
+    &:hover {
+        background: linear-gradient(135deg, #03a9f4, #0288d1);
+    }
+}
+
+.ErrorMessageNotConnected {
+    color: #ef5350;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.publishErrorMessage {
+    color: #ef5350;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 12px;
+    padding: 8px 12px;
+    background: rgba(239, 83, 80, 0.1);
+    border: 1px solid rgba(239, 83, 80, 0.3);
+    border-radius: 8px;
+    max-width: 300px;
+}
+
+.iframeCode {
+    width: 100vw;
+    min-height: calc(100vh - 60px);
+}
+
+.spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffffff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 6px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

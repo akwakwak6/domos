@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "es2024",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@ha": ["ha.ts"]
+        }
+    }
+}

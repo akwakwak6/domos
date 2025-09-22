@@ -1,0 +1,46 @@
+# Logs
+logs
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Build output
+/dist/
+/build/
+/out/
+/coverage/
+runner/dist
+
+# Package builds (explicit, in case tools change noEmit)
+client/dist/
+server/dist/
+shared/dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# IDE/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Temp
+.tmp/
+.temp/
+.tmp*/
+
+local
+server/src/db/db.sqlite
+runner/ha.ts
+workdir

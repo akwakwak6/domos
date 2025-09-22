@@ -1,0 +1,164 @@
+# Automatisation du build et push Docker sur GHCR avec versioning
+# Déclenchement: push sur la branche main
+# Tags générés: 
+#  - latest
+#  - sha-<shortsha>
+#  - v<version extraite de package.json>
+# Aucun secret n'est requis pour GHCR, le GITHUB_TOKEN natif suffit (permissions ci-dessous)
+
+name: Build and Push Docker image
+
+
+on:
+  push:
+    branches:
+      - main
+
+# Permissions minimales nécessaires pour pousser sur GHCR
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  # IMAGE_NAME = owner/repo (ex: my-org/my-repo)
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  docker:
+    name: Build and push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Récupérer l'état actuel de la branche de base (ex: main) après le merge
+          ref: ${{ github.event.pull_request.base.ref }}
+          # Nécessaire pour accéder au commit précédent (HEAD^)
+          fetch-depth: 2
+
+      # Connexion à GitHub Container Registry avec le token GitHub intégré
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Activer le support multi-arch (QEMU) pour builder amd64 et arm64
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # Créer un builder Buildx pour builds multi-plateformes
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # S'assurer que jq est disponible pour lire package.json
+      - name: Install jq
+        run: |
+          if ! command -v jq >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y jq
+          fi
+
+      # Extraire la version depuis package.json (format semver attendu, ex: 1.0.0)
+      - name: Read version from package.json
+        id: pkg
+        run: |
+          if [ ! -f package.json ]; then
+            echo "package.json introuvable, impossible de déterminer la version" >&2
+            exit 1
+          fi
+          VERSION=$(jq -r .version package.json)
+          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+            echo "Version invalide dans package.json" >&2
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      # Vérifier que la version a augmenté par rapport au commit précédent sur main
+      - name: Verify version bump
+        run: |
+          set -euo pipefail
+          CURR="${{ steps.pkg.outputs.version }}"
+          # Tenter de lire la version précédente depuis HEAD^:package.json
+          if PREV_JSON=$(git show HEAD^:package.json 2>/dev/null); then
+            PREV=$(echo "$PREV_JSON" | jq -r .version)
+          else
+            echo "Aucun commit précédent ou package.json précédent introuvable, on saute la vérification."
+            exit 0
+          fi
+
+          if [ -z "${PREV:-}" ] || [ "$PREV" = "null" ]; then
+            echo "Version précédente introuvable, on saute la vérification."
+            exit 0
+          fi
+
+          if [ "$PREV" = "$CURR" ]; then
+            echo "La version n'a pas changé ($CURR). Veuillez incrémenter la version dans package.json." >&2
+            exit 1
+          fi
+
+          # Vérifier que CURR > PREV (comparaison semver approximative via sort -V)
+          TOP=$(printf '%s\n' "$PREV" "$CURR" | sort -V | tail -n1)
+          if [ "$TOP" != "$CURR" ]; then
+            echo "La version actuelle ($CURR) n'est pas supérieure à la version précédente ($PREV)." >&2
+            exit 1
+          fi
+
+          echo "Version OK: $PREV -> $CURR"
+
+      # Construire la liste des tags Docker
+      - name: Compute Docker tags
+        id: tags
+        run: |
+          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+          IMAGE_RAW="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          # Normaliser en minuscules pour satisfaire GHCR
+          IMAGE=$(echo "$IMAGE_RAW" | tr '[:upper:]' '[:lower:]')
+
+          # Tags souhaités
+          TAG_LATEST="${IMAGE}:latest"
+          TAG_SHA="${IMAGE}:sha-${SHORT_SHA}"
+          TAG_VERSION="${IMAGE}:v${{ steps.pkg.outputs.version }}"
+
+          # Sortie multi-ligne compatible GitHub Actions
+          {
+            echo "list<<TAGS";
+            echo "$TAG_LATEST";
+            echo "$TAG_SHA";
+            echo "$TAG_VERSION";
+            echo TAGS;
+          } >> "$GITHUB_OUTPUT"
+          # Exposer aussi le nom d'image normalisé aux autres étapes
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+
+      # Optionnel: générer des labels OCI utiles
+      - name: Docker metadata (labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.tags.outputs.image }}
+          labels: |
+            org.opencontainers.image.title=${{ github.event.repository.name }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=v${{ steps.pkg.outputs.version }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+
+      # Build & Push en utilisant le fichier dockerfile (note: nom en minuscule dans ce repo)
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          # Désactiver provenance/SBOM pour éviter que GHCR affiche "platform unknown"
+          provenance: false
+          sbom: false
+          tags: ${{ steps.tags.outputs.list }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Vous pouvez activer le cache si besoin:
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max

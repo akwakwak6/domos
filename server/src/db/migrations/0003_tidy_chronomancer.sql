@@ -1,0 +1,1 @@
+ALTER TABLE `config` RENAME COLUMN "runner_is_enabled" TO "is_runner_enabled";

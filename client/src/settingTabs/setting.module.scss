@@ -1,0 +1,236 @@
+.deviceContainer {
+    padding: 20px 0;
+}
+
+.title {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #e6e8eb;
+    text-align: center;
+}
+
+.loading,
+.error,
+.empty {
+    padding: 40px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 16px;
+}
+
+.error {
+    color: #ef5350;
+}
+
+.tableContainer {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+}
+
+.tableContainerRelative {
+    position: relative;
+}
+
+.devicesTable {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+        background: rgba(255, 255, 255, 0.05);
+        color: #e6e8eb;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 16px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    td {
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        color: #d1d5db;
+        font-size: 14px;
+        text-align: center;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+}
+
+.deviceId {
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+    font-size: 13px;
+    color: #03a9f4;
+    font-weight: 500;
+}
+
+.deviceName {
+    font-weight: 500;
+    color: #e6e8eb;
+}
+
+.deviceType {
+    color: #9ca3af;
+    font-size: 13px;
+    text-transform: capitalize;
+}
+
+.status {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    &.detected {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+        border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+
+    &.notDetected {
+        background: rgba(255, 152, 0, 0.2);
+        color: #ff9800;
+        border: 1px solid rgba(255, 152, 0, 0.3);
+    }
+}
+
+.nameInput {
+    width: 100%;
+    min-width: 120px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #e6e8eb;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    outline: none;
+    transition: all 0.2s ease;
+    background: rgba(100, 100, 100, 0.5);
+
+    &:hover {
+        background: rgba(150, 150, 150, 0.5);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:focus {
+        background: rgba(200, 200, 200, 0.5);
+        border-color: #03a9f4;
+        box-shadow: 0 0 0 2px rgba(3, 169, 244, 0.2);
+    }
+}
+
+.enableCheckbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #03a9f4;
+    cursor: pointer;
+}
+
+.deleteButton {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background: #dc2626;
+        transform: scale(1.05);
+    }
+
+    &.disabled {
+        background: #6b7280;
+        color: #9ca3af;
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+}
+
+.headerRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.headerTitle {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #e6e8eb;
+}
+
+.savingOverlay {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalCard {
+    background: #1e1e1e;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 420px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modalTitle {
+    margin: 0 0 50px 0;
+}
+
+.modalActions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding-top: 12px;
+}
+
+.btnSecondary {
+    background: transparent;
+    color: #e6e8eb;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btnDanger {
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
