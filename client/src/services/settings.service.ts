@@ -36,6 +36,9 @@ export function onSettingsTabChange(onChange: (tab: SettingsTab) => void): () =>
 }
 
 export function setSettingsTab(tab: SettingsTab): void {
+    if (settingsTab === tab) {
+        return;
+    }
     settingsTab = tab;
     onSettingsTabChangeListeners.forEach((listener) => listener(tab));
 }
