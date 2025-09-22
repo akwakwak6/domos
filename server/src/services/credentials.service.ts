@@ -30,7 +30,7 @@ class CredentialsService {
     private async checkCredentials(url: string, token: string): Promise<void> {
         let response: Response;
         try {
-            response = await fetch(`${url}/api/`, {
+            response = await fetch(`${url}api/`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,

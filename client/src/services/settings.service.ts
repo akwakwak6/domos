@@ -2,7 +2,7 @@ import { DeviceTypeDto, CredentialsDto, DeviceDto, RunnerLogDto, RunnerStateDto,
 
 const isProd = import.meta.env.VITE_NODE_ENV === "production";
 
-const BASE_URL = isProd ? window.location.origin + "/api/" : "http://localhost:3000/";
+const BASE_URL = isProd ? "/api/" : "http://localhost:3000/";
 
 const URL_DEVICES = BASE_URL + "dashboard/devices";
 const URL_DEVICE_TYPES = BASE_URL + "dashboard/types";
@@ -40,7 +40,7 @@ export function setSettingsTab(tab: SettingsTab): void {
     onSettingsTabChangeListeners.forEach((listener) => listener(tab));
 }
 
-export const iframeUrl = isProd ? window.location.origin + "/code" : "/code-fallback.html";
+export const iframeUrl = isProd ? "/code/" : "/code-fallback.html";
 
 async function sendFetch<T>(
     url: string,
