@@ -1,6 +1,16 @@
+// import { IEntitySession } from "home-assistant-device-sdk";
 import { HA } from "@ha";
 
-export const myAutomation = () => {
+export const myAutomation = (/*session: IEntitySession*/) => {
     console.log("start myAutomation");
-    // use HA.device.YourDevice.turnOn();
+
+    // HA.devices.myLight.toggle()
+
+    // session.onEnd = setInterval(() => {
+    // HA.devices.myLight2.toggle()
+    //}, 5000)
+
+    //HA.devices.mySwitch.onTurnOn = () => {
+    // HA.devices.myLight3.turnOn()
+    //}
 };

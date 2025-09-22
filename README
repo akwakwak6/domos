@@ -1,0 +1,44 @@
+# Domos – TypeScript automations for Home Assistant
+
+This repository provides a code-server style web UI to build and run Home Assistant automations in TypeScript. It uses the Home Assistant Device SDK to strongly-type your devices and services and to generate a typed client (`ha.ts`).
+
+## SDK
+
+https://github.com/akwakwak6/home-assistant-device-sdk
+
+## Quick start
+
+### 1. Start the container
+
+Run this Docker command from your project directory. It will mount `./app` as the working folder and expose the web UI on port 3000.
+
+```
+docker run -it --rm \
+  -v ./app:/app/workdir \
+  -p 3000:3000 \
+  ghcr.io/akwakwak6/domos
+```
+
+Then open http://localhost:3000 in your browser.
+
+### 2. Log in to Home Assistant
+
+In the web UI, provide your Home Assistant base URL and a Long-Lived Access Token to authenticate. You can create a token in Home Assistant under your user profile.
+
+### 3. Click “Sync”
+
+Use the “Sync” action in the UI to connect and generate a typed SDK file named `ha.ts`. This file contains typed entities and services for your Home Assistant instance.
+
+### 4. Edit your automations in TypeScript
+
+Open `src/demo.ts` in the code editor (inside the mounted workspace) and add your devices/logic using the generated `ha` client. Example paths inside the container: `src/demo.ts`.
+
+### 5. Publish and run
+
+Click “Publish” in the UI to build and start your automations. The runner will compile your code and execute your automations against your Home Assistant.
+
+## Notes
+
+-   The generated `ha.ts` is derived from your Home Assistant instance after you authenticate and click “Sync”. Re-run “Sync” whenever your entities/services change.
+-   Make sure `./app/` exists on your host before starting Docker so your code and generated files are persisted.
+-   The image exposes port `3000`; change the `-p` mapping if you need a different host port.
