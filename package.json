@@ -1,6 +1,6 @@
 {
   "name": "domos_poc",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "Akwa",
   "license": "MIT",
   "type": "module",
@@ -18,7 +18,7 @@
     "build": "npm run build --workspaces --if-present"
   },
   "dependencies": {
-    "home-assistant-device-sdk": "^0.6.6",
+    "home-assistant-device-sdk": "^0.6.7",
     "zod": "^4.1.5"
   },
   "devDependencies": {
