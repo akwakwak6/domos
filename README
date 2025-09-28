@@ -1,6 +1,25 @@
 # Domos – TypeScript automations for Home Assistant
 
-This repository provides a code-server style web UI to build and run Home Assistant automations in TypeScript. It uses the Home Assistant Device SDK to strongly-type your devices and services and to generate a typed client (`ha.ts`).
+Build and run Home Assistant automations in TypeScript with a code-server style web UI. Domos uses the Home Assistant Device SDK to strongly-type your devices and services and generates a typed client (`ha.ts`).
+
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)
+![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024%2B-41BDF5?logo=home-assistant&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-20%2B-2496ED?logo=docker&logoColor=white)
+
+## Table of contents
+
+- **[Features](#features)**
+- **[SDK](#sdk)**
+- **[Quick start](#quick-start)**
+- **[Prerequisites](#prerequisites)**
+- **[Folder structure](#folder-structure)**
+- **[Troubleshooting](#troubleshooting)**
+
+## Features
+
+- **Typed SDK generation**: one-click “Sync” to generate `ha.ts` with typed entities and services from your Home Assistant.
+- **Code-focused UI**: edit and publish automations from a browser-based editor.
+- **Containerized**: run via Docker, mount your local workspace at `./app`.
 
 ## SDK
 
@@ -12,7 +31,7 @@ https://github.com/akwakwak6/home-assistant-device-sdk
 
 Run this Docker command from your project directory. It will mount `./app` as the working folder and expose the web UI on port 3000.
 
-```
+```bash
 docker run -it --rm \
   -v ./app:/app/workdir \
   -p 3000:3000 \
@@ -42,3 +61,29 @@ Click “Publish” in the UI to build and start your automations. The runner wi
 -   The generated `ha.ts` is derived from your Home Assistant instance after you authenticate and click “Sync”. Re-run “Sync” whenever your entities/services change.
 -   Make sure `./app/` exists on your host before starting Docker so your code and generated files are persisted.
 -   The image exposes port `3000`; change the `-p` mapping if you need a different host port.
+
+## Prerequisites
+
+- **Docker** 20+ installed.
+- **Home Assistant** URL reachable from where the container runs.
+- **Long-Lived Access Token** created from your Home Assistant user profile.
+- A local folder `./app` to persist your workspace and generated files.
+
+## Folder structure
+
+Once the container is running with `-v ./app:/app/workdir`, your workspace will typically contain:
+
+```
+app/
+  src/
+    demo.ts          # Example automation entrypoint
+  ha.ts              # Generated typed SDK (after Sync)
+  package.json       # Your project dependencies/scripts
+  tsconfig.json      # TypeScript configuration
+```
+
+## Troubleshooting
+
+- **`ha.ts` not generated**: ensure the base URL and token are correct, then click “Sync” again. Check the UI logs for errors.
+- **Cannot access UI**: verify the port mapping `-p 3000:3000` and browse to `http://localhost:3000`.
+- **Changes not persisted**: confirm the host folder `./app` exists before running Docker and that it’s mounted correctly.

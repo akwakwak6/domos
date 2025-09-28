@@ -32,6 +32,7 @@ class RunnerService {
     }
 
     async publish() {
+        await this.stop();
         await dashboardRepo.deleteLogs();
 
         try {
